@@ -1,9 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcrypt';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
 
 async function main() {
+  const hashPassword = await hash(process.env.SEED_PASSWORD, 12);
+
   await prisma.user.create({
     data: {
       username: 'chourafi',
@@ -13,7 +16,7 @@ async function main() {
       role: 'admin',
       imagePublicId: '',
       imageUrl: '',
-      password: 'chourafi',
+      password: hashPassword,
     },
   });
 }
