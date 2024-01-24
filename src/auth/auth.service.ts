@@ -24,8 +24,8 @@ export class AuthService {
     return verifyPassword;
   }
 
-  hashPassword(pwd: string) {
-    return hash(pwd, 12);
+  async hashPassword(pwd: string) {
+    return await hash(pwd, 12);
   }
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -56,7 +56,7 @@ export class AuthService {
     }
 
     // hash password
-    registerDto.password = await this.hashPassword(registerDto.password);
+    registerDto.password = await hash(registerDto.password, 12);
 
     // create new user
     const createUser = await this.prisma.user.create({
