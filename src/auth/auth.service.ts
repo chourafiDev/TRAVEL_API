@@ -38,7 +38,14 @@ export class AuthService {
     const checkPassword = await this.verifyPassword(password, user.password);
 
     if (checkPassword) {
-      const { password, ...result } = user;
+      const {
+        password,
+        imagePublicId,
+        createdAt,
+        updatedAt,
+        email,
+        ...result
+      } = user;
       return result;
     }
 
@@ -73,6 +80,13 @@ export class AuthService {
 
   generateToken(user: any) {
     return {
+      user: {
+        username: user.username,
+        firstname: user.firstName,
+        lastname: user.lastName,
+        image: user.imageUrl,
+        role: user.role,
+      },
       access_token: this.jwtService.sign({
         username: user.username,
         sub: user.id,
