@@ -11,6 +11,10 @@ export class CategoriesService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  async findAll() {
+    return await this.prisma.category.findMany();
+  }
+
   async create(createCategoryDto: CreateCategoryDto) {
     console.log('createCategoryDto', createCategoryDto);
     const { image, content } = createCategoryDto;
@@ -38,10 +42,6 @@ export class CategoriesService {
       statusCode: 201,
       message: 'Category Created Successfull',
     };
-  }
-
-  async findAll() {
-    return await this.prisma.category.findMany();
   }
 
   async findOne(id: number) {
