@@ -12,4 +12,8 @@ export class CloudinaryService {
       folder: `travel/${fileFolder}`,
     });
   }
+
+  async destroyImage(publicId: string): Promise<CloudinaryResponse> {
+    return await v2.uploader.destroy(publicId);
+  }
 }
