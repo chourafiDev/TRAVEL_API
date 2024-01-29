@@ -49,6 +49,9 @@ export class CategoriesController {
     return this.categoriesService.findOne(id);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -61,7 +64,6 @@ export class CategoriesController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  @Get('/')
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.remove(id);
