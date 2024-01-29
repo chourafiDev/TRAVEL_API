@@ -16,60 +16,58 @@ enum Role {
 }
 
 model User {
-  id               Int @default(autoincrement()) @id
-  username         String @unique
-  email            String @unique
-  firstName        String
-  lastName         String
-  imagePublicId    String? @unique
-  imageUrl         String?
-  role             Role @default(user)
-  password         String
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  email         String   @unique
+  firstName     String
+  lastName      String
+  imagePublicId String?  @unique
+  imageUrl      String?
+  role          Role     @default(user)
+  password      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  destinations     Destination[]
-  reviews          Review[]
+  destinations Destination[]
+  reviews      Review[]
 }
 
 model Destination {
-  id               Int @default(autoincrement()) @id
-  title            String
-  description      String
-  price            Float
-  imagesUrl        String[]
-  imagesPublicId   String[]
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt  
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String
+  price          Float
+  imagesUrl      String[]
+  imagesPublicId String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  reviews          Review[]
-  user             User @relation(fields: [userId], references: [id])
-  userId           Int
-  category         Category @relation(fields: [categoryId], references: [id])
-  categoryId       Int
+  reviews    Review[]
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
 }
 
 model Review {
-  id               Int @default(autoincrement()) @id
-  content          String
-  rating           Float
-  createdAt        DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  content   String
+  rating    Float
+  createdAt DateTime @default(now())
 
-  destination      Destination @relation(fields: [destinationId], references: [id])
-  destinationId    Int
-  user             User @relation(fields: [userId], references: [id])
-  userId           Int
+  destination   Destination @relation(fields: [destinationId], references: [id])
+  destinationId Int
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
 }
 
-
 model Category {
-  id               Int @default(autoincrement()) @id
-  content          String
-  imageUrl         String
-  imagesPublicId   String
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  content       String
+  imageUrl      String
+  imagePublicId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-
-  destinations     Destination[]
+  destinations Destination[]
 }
