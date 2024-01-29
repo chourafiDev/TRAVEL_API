@@ -24,18 +24,20 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoriesService.create(createCategoryDto);
-  }
-
   // Find all categories
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JWTAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @UseGuards(JWTAuthGuard)
   @Get('/')
   async findAll(): Promise<Category[] | undefined> {
     return this.categoriesService.findAll();
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Post('/create')
+  create(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoriesService.create(createCategoryDto);
   }
 
   // Find one category
