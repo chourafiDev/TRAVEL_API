@@ -10,9 +10,7 @@ import {
   Post,
   Put,
   Request,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -20,7 +18,6 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { User } from '@prisma/client';
 import { Role } from 'src/utils/role.enum';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -70,13 +67,11 @@ export class UsersController {
   @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Put(':id')
-  @UseInterceptors(FileInterceptor('image'))
   update(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() userData: UpdateUserDto,
+    @Body() userDto: UpdateUserDto,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<any> {
-    return this.usersService.update(userData, file, id);
+    return this.usersService.update(userDto, id);
   }
 
   // Delete Profile
