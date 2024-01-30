@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -34,28 +35,30 @@ export class UsersService {
   }
 
   // Create User
-  async create(userData: CreateUserDto, file: any) {
-    const { email, username, password, role, firstName, lastName } = userData;
+  async create(userDto: CreateUserDto) {
+    const { email, username, password, role, image, firstName, lastName } =
+      userDto;
 
     // Upload the image to Cloudinary
     let imageUrl = '';
     let imagePublicId = '';
 
-    if (file) {
-      console.log('test');
-      const res = await this.cloudinaryService.uploadImage(file, 'users');
-      console.log('res', res);
+    if (image) {
+      const res = await this.cloudinaryService.uploadImage(image, 'users');
       imageUrl = res.secure_url;
       imagePublicId = res.public_id;
     }
+
+    // hash password
+    const hashPassword = await hash(password, 12);
 
     await this.prisma.user.create({
       data: {
         email,
         username,
-        password,
-        // imageUrl,
-        // imagePublicId,
+        password: hashPassword,
+        imageUrl,
+        imagePublicId,
         role,
         firstName,
         lastName,
@@ -111,12 +114,15 @@ export class UsersService {
     };
   }
 
-  // Delete User
-  async delete(id: number) {
-    const user = await this.prisma.user.findFirst({ where: { id } });
+  // Remove User
+  async remove(id: number) {
+    // check if the user exists
+    const user = await this.findOneById(id);
+    const image_id = user.imagePublicId;
 
-    if (!user) {
-      throw new NotFoundException('User not found');
+    if (image_id) {
+      //Delete user image
+      await this.cloudinaryService.destroyImage(image_id);
     }
 
     // Delete exist user
