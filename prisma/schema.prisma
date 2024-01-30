@@ -21,7 +21,7 @@ model User {
   email         String   @unique
   firstName     String
   lastName      String
-  imagePublicId String?  @unique
+  imagePublicId String?
   imageUrl      String?
   role          Role     @default(user)
   password      String
