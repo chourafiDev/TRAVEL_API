@@ -72,24 +72,25 @@ export class UsersService {
   }
 
   // Update User
-  async update(userData: UpdateUserDto, file: any, id: number) {
-    // check if user not exist
-    const user = await this.prisma.user.findFirst({ where: { id } });
-    console.log('user', user);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+  async update(userDto: UpdateUserDto, id: number) {
+    // check if the category exists
+    const user = await this.findOneById(id);
 
-    const { email, username, password, role, firstName, lastName } = userData;
+    const { email, username, role, image, firstName, lastName } = userDto;
 
     // Upload the image to Cloudinary
-    let imageUrl = '';
-    let imagePublicId = '';
+    let imageUrl = user.imageUrl ? user.imageUrl : '';
+    let imagePublicId = user.imagePublicId ? user.imagePublicId : '';
 
-    if (file) {
-      console.log('test');
-      const res = await this.cloudinaryService.uploadImage(file, 'users');
-      console.log('res', res);
+    if (image) {
+      const image_id = user.imagePublicId;
+
+      if (image_id) {
+        //Delete previous image
+        await this.cloudinaryService.destroyImage(image_id);
+      }
+
+      const res = await this.cloudinaryService.uploadImage(image, 'users');
       imageUrl = res.secure_url;
       imagePublicId = res.public_id;
     }
@@ -99,9 +100,8 @@ export class UsersService {
       data: {
         email,
         username,
-        password,
-        // imageUrl,
-        // imagePublicId,
+        imageUrl,
+        imagePublicId,
         role,
         firstName,
         lastName,
