@@ -61,12 +61,8 @@ export class UsersController {
   @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Post('create')
-  @UseInterceptors(FileInterceptor('image'))
-  create(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() userData: CreateUserDto,
-  ): Promise<any> {
-    return this.usersService.create(userData, file);
+  create(@Body() userDto: CreateUserDto): Promise<any> {
+    return this.usersService.create(userDto);
   }
 
   // Update User
@@ -88,7 +84,7 @@ export class UsersController {
   @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    return this.usersService.delete(id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    return this.usersService.remove(id);
   }
 }
