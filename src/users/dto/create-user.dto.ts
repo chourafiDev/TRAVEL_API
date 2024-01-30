@@ -1,5 +1,4 @@
 import {
-  IsBase64,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -34,5 +33,5 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  password: Role;
+  password: string;
 }
