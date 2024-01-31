@@ -15,7 +15,11 @@ export class UsersService {
 
   // Get All Users
   async getAll(): Promise<User[] | undefined> {
-    return await this.prisma.user.findMany();
+    return await this.prisma.user.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
   }
 
   // Get User By Id
