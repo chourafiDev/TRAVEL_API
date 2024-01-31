@@ -5,9 +5,10 @@ import { UsersModule } from './users/users.module';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CategoriesModule } from './categories/categories.module';
+import { DestinationsModule } from './destinations/destinations.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, UsersModule, CloudinaryModule, CategoriesModule],
+  imports: [PrismaModule, AuthModule, UsersModule, CloudinaryModule, CategoriesModule, DestinationsModule],
   providers: [CloudinaryService],
 })
 export class AppModule {}
