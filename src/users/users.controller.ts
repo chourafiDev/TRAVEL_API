@@ -31,7 +31,6 @@ export class UsersController {
   @Get('me')
   getProfile(@Request() req: any): Promise<User | undefined> {
     const { username } = req.user;
-    console.log('username', username);
     return this.usersService.getProfile(username);
   }
 
