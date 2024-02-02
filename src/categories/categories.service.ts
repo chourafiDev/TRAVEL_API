@@ -12,7 +12,23 @@ export class CategoriesService {
   ) {}
 
   async findAll() {
-    return await this.prisma.category.findMany();
+    const categories = await this.prisma.category.findMany({});
+
+    const categoriesWithDestinationCounts = await Promise.all(
+      categories.map(async (category) => {
+        const destinationCount = await this.prisma.destination.count({
+          where: { categoryId: category.id },
+        });
+
+        return {
+          ...category,
+          destinationCount,
+        };
+      }),
+    );
+
+    return categoriesWithDestinationCounts;
+    // return await this.prisma.category.findMany();
   }
 
   async create(createCategoryDto: CreateCategoryDto) {
