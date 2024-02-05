@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Favorite } from '@prisma/client';
@@ -7,8 +7,9 @@ import { Favorite } from '@prisma/client';
 export class FavoritesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<Favorite[] | undefined> {
+  async findAll(userId: number): Promise<Favorite[] | undefined> {
     return await this.prisma.favorite.findMany({
+      where: { userId },
       include: {
         destination: {
           include: {
@@ -23,20 +24,13 @@ export class FavoritesService {
     });
   }
 
-  async findOne(id: number): Promise<Favorite | undefined> {
-    const favorite = await this.prisma.favorite.findFirst({
-      where: { id },
-    });
-
-    if (!favorite) {
-      throw new NotFoundException('Favorite not found');
-    } else {
-      return favorite;
-    }
-  }
-
-  async create(createFavoriteDto: CreateFavoriteDto, userId: number) {
+  async favorite(createFavoriteDto: CreateFavoriteDto, userId: number) {
     const { destinationId } = createFavoriteDto;
+
+    await this.prisma.destination.update({
+      where: { id: destinationId },
+      data: { isFavorite: true },
+    });
 
     await this.prisma.favorite.create({
       data: {
@@ -47,19 +41,29 @@ export class FavoritesService {
 
     return {
       statusCode: 201,
-      message: 'Favorite Created Successfull',
+      message: 'Destination Favorited Successfully',
     };
   }
 
-  async remove(id: number) {
-    // check if favorite exists
-    await this.findOne(id);
+  async unfavorite(id: number, userId: number) {
+    await this.prisma.destination.update({
+      where: { id },
+      data: { isFavorite: false },
+    });
 
     // Delete favorite
-    await this.prisma.favorite.delete({ where: { id } });
+    await this.prisma.favorite.delete({
+      where: {
+        userId_destinationId: {
+          userId: userId,
+          destinationId: id,
+        },
+      },
+    });
+
     return {
       statusCode: 200,
-      message: 'Favorite Deleted Successfull',
+      message: 'Destination Unfavorited Successfully',
     };
   }
 }

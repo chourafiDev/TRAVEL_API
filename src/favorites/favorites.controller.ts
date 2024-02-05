@@ -22,29 +22,24 @@ export class FavoritesController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JWTAuthGuard)
   @Get()
-  findAll() {
-    return this.favoritesService.findAll();
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JWTAuthGuard)
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.favoritesService.findOne(id);
+  findAll(@Request() req: any) {
+    const { id: userId } = req.user;
+    return this.favoritesService.findAll(userId);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JWTAuthGuard)
   @Post()
-  create(@Body() createFavoriteDto: CreateFavoriteDto, @Request() req: any) {
+  favorite(@Body() createFavoriteDto: CreateFavoriteDto, @Request() req: any) {
     const { id: userId } = req.user;
-    return this.favoritesService.create(createFavoriteDto, userId);
+    return this.favoritesService.favorite(createFavoriteDto, userId);
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JWTAuthGuard)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.favoritesService.remove(id);
+  unfavorite(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
+    const { id: userId } = req.user;
+    return this.favoritesService.unfavorite(id, userId);
   }
 }
