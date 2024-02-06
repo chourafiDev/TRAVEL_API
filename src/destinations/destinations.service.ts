@@ -51,6 +51,25 @@ export class DestinationsService {
     });
   }
 
+  // Get top destinations
+  async findTop(): Promise<Destination[] | undefined> {
+    return await this.prisma.destination.findMany({
+      take: 10,
+      include: {
+        images: {
+          select: {
+            imageUrl: true,
+          },
+        },
+        category: {
+          select: {
+            content: true,
+          },
+        },
+      },
+    });
+  }
+
   // Get destination
   async findOne(id: number): Promise<Destination | undefined> {
     const destination = await this.prisma.destination.findFirst({

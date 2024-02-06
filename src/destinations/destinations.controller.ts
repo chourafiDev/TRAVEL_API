@@ -34,6 +34,13 @@ export class DestinationsController {
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JWTAuthGuard)
+  @Get('top')
+  findTop(): Promise<Destination[] | undefined> {
+    return this.destinationsService.findTop();
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JWTAuthGuard)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<unknown | undefined> {
     return this.destinationsService.findOne(id);
