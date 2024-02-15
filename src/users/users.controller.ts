@@ -9,7 +9,6 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -24,15 +23,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
-
-  // Get User Profile
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JWTAuthGuard)
-  @Get('me')
-  getProfile(@Request() req: any): Promise<User | undefined> {
-    const { username } = req.user;
-    return this.usersService.getProfile(username);
-  }
 
   // Get All Users
   @HttpCode(HttpStatus.OK)

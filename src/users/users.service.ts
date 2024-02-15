@@ -137,9 +137,4 @@ export class UsersService {
       message: 'User Deleted Successfull',
     };
   }
-
-  // Get User Profile
-  async getProfile(username: string): Promise<User | undefined> {
-    return await this.prisma.user.findFirst({ where: { username } });
-  }
 }
