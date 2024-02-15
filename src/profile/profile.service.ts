@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProfileDto } from './dto/profile-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { ImageUserDto } from './dto/image-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class ProfileService {
@@ -13,6 +15,12 @@ export class ProfileService {
     private cloudinaryService: CloudinaryService,
     private userService: UsersService,
   ) {}
+
+  verifyPassword(pwd: string, userPwd: string) {
+    const verifyPassword = compare(pwd, userPwd);
+
+    return verifyPassword;
+  }
 
   // Get Profile
   async getProfile(username: string): Promise<User | undefined> {
@@ -95,5 +103,35 @@ export class ProfileService {
       statusCode: 200,
       message: 'Image Updated Successfull',
     };
+  }
+
+  // Change Password
+  async changePassword(passwordDto: ChangePasswordDto, username: string) {
+    // check if the user  exists
+    const user = await this.userService.findOne(username);
+
+    const { oldPassword, newPassword } = passwordDto;
+
+    //Check is password valid
+    const checkPassword = await this.verifyPassword(oldPassword, user.password);
+
+    if (checkPassword) {
+      // hash password
+      const hashPassword = await hash(newPassword, 12);
+
+      await this.prisma.user.update({
+        where: { username },
+        data: {
+          password: hashPassword,
+        },
+      });
+
+      return {
+        statusCode: 200,
+        message: 'Password Updated Successfull',
+      };
+    } else {
+      throw new NotFoundException('Old password invalid');
+    }
   }
 }

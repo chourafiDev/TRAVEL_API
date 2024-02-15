@@ -14,6 +14,7 @@ import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from '@prisma/client';
 import { ProfileDto } from './dto/profile-user.dto';
 import { ImageUserDto } from './dto/image-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -50,5 +51,17 @@ export class ProfileController {
   ): Promise<any> {
     const { username } = req.user;
     return this.profileService.updateProfileImage(imageDto, username);
+  }
+
+  // Update Profile Image
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JWTAuthGuard)
+  @Patch('change-password')
+  changePassword(
+    @Body() passwordDto: ChangePasswordDto,
+    @Request() req: any,
+  ): Promise<any> {
+    const { username } = req.user;
+    return this.profileService.changePassword(passwordDto, username);
   }
 }
