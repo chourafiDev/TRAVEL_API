@@ -11,6 +11,7 @@ import {
   UseGuards,
   ParseIntPipe,
   Request,
+  Query,
 } from '@nestjs/common';
 import { DestinationsService } from './destinations.service';
 import { CreateDestinationDto } from './dto/create-destination.dto';
@@ -20,6 +21,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/utils/role.enum';
 import { Destination } from '../utils/types';
+import { DestinationsFiletrDto } from './dto/destinations-filter.dto';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -28,8 +30,14 @@ export class DestinationsController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JWTAuthGuard)
   @Get()
-  findAll(): Promise<Destination[] | undefined> {
-    return this.destinationsService.findAll();
+  findAll(
+    @Query() filterDto: DestinationsFiletrDto,
+  ): Promise<Destination[] | undefined> {
+    if (Object.keys(filterDto).length) {
+      return this.destinationsService.findAllWithFilters(filterDto);
+    } else {
+      return this.destinationsService.findAll();
+    }
   }
 
   @HttpCode(HttpStatus.OK)

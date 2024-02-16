@@ -4,6 +4,17 @@ import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { Destination } from '../utils/types';
+import { DestinationsFiletrDto } from './dto/destinations-filter.dto';
+import { Prisma } from '@prisma/client';
+
+interface Root {
+  price: Price;
+}
+
+interface Price {
+  gte: number;
+  lte: number;
+}
 
 @Injectable()
 export class DestinationsService {
@@ -33,6 +44,94 @@ export class DestinationsService {
   // Get all destinations
   async findAll(): Promise<Destination[] | undefined> {
     return await this.prisma.destination.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
+      include: {
+        images: {
+          select: {
+            imageUrl: true,
+          },
+        },
+        category: {
+          select: {
+            content: true,
+          },
+        },
+      },
+    });
+  }
+
+  // Get all destinations by filters
+  async findAllWithFilters(
+    filterDto: DestinationsFiletrDto,
+  ): Promise<Destination[] | undefined> {
+    const { search, minPrice, maxPrice, duration, category, destination } =
+      filterDto;
+
+    let fullQuery: Prisma.DestinationWhereInput[] = [];
+
+    // search by keyword
+    if (search) {
+      fullQuery.push({
+        OR: [
+          {
+            title: {
+              search: search,
+            },
+          },
+          {
+            description: {
+              search: search,
+            },
+          },
+        ],
+      });
+    }
+
+    // search by destination
+    if (destination) {
+      fullQuery.push({
+        destination: {
+          search: destination,
+        },
+      });
+    }
+
+    // search by duration
+    if (duration) {
+      fullQuery.push({
+        duration: { equals: duration },
+      });
+    }
+
+    // search by category
+    if (category) {
+      fullQuery.push({
+        category: {
+          content: { search: category },
+        },
+      });
+    }
+
+    // search by price
+    if (minPrice || maxPrice) {
+      const priceQuery: any = {};
+
+      if (minPrice) {
+        priceQuery.price = { gte: Number(minPrice) };
+      }
+      if (maxPrice) {
+        priceQuery.price = { ...priceQuery.price, lte: Number(maxPrice) };
+      }
+
+      fullQuery.push(priceQuery);
+    }
+
+    return await this.prisma.destination.findMany({
+      where: {
+        AND: fullQuery,
+      },
       orderBy: {
         createdAt: 'asc',
       },
