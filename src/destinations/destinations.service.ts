@@ -185,6 +185,11 @@ export class DestinationsService {
             content: true,
           },
         },
+        reviews: {
+          select: {
+            rating: true,
+          },
+        },
       },
     });
 
