@@ -8,9 +8,10 @@ import { CategoriesModule } from './categories/categories.module';
 import { DestinationsModule } from './destinations/destinations.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ProfileModule } from './profile/profile.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, UsersModule, CloudinaryModule, CategoriesModule, DestinationsModule, FavoritesModule, ProfileModule],
+  imports: [PrismaModule, AuthModule, UsersModule, CloudinaryModule, CategoriesModule, DestinationsModule, FavoritesModule, ProfileModule, ReviewsModule],
   providers: [CloudinaryService],
 })
 export class AppModule {}
