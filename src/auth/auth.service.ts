@@ -52,6 +52,22 @@ export class AuthService {
     return null;
   }
 
+  generateToken(user: any) {
+    return {
+      user: {
+        username: user.username,
+        firstname: user.firstName,
+        lastname: user.lastName,
+        image: user.imageUrl,
+        role: user.role,
+      },
+      access_token: this.jwtService.sign({
+        username: user.username,
+        sub: user.id,
+      }),
+    };
+  }
+
   async register(registerDto: RegisterDto) {
     // check if user exists
     const checkUserExists = await this.usersService.findOne(
@@ -76,21 +92,5 @@ export class AuthService {
         message: 'Register Successfull',
       };
     }
-  }
-
-  generateToken(user: any) {
-    return {
-      user: {
-        username: user.username,
-        firstname: user.firstName,
-        lastname: user.lastName,
-        image: user.imageUrl,
-        role: user.role,
-      },
-      access_token: this.jwtService.sign({
-        username: user.username,
-        sub: user.id,
-      }),
-    };
   }
 }
