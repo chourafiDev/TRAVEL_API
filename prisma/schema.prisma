@@ -65,7 +65,7 @@ model DestinationImages {
 }
 
 model Favorite {
-  id Int  @default(autoincrement())
+  id Int  @id @default(autoincrement())
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
@@ -73,7 +73,7 @@ model Favorite {
   destination   Destination @relation(fields: [destinationId], references: [id])
   destinationId Int
 
-  @@id([userId, destinationId])
+  @@unique([userId, destinationId])
 }
 
 model Review {
