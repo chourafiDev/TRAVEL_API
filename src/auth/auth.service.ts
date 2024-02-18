@@ -8,7 +8,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { compare, hash } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma } from '@prisma/client';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -52,7 +52,7 @@ export class AuthService {
     return null;
   }
 
-  async register(registerDto: Prisma.UserCreateInput) {
+  async register(registerDto: RegisterDto) {
     // check if user exists
     const checkUserExists = await this.usersService.findOne(
       registerDto.username,

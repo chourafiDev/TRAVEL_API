@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Prisma } from '@prisma/client';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,15 +17,14 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
-  async register(@Body() registerDto: Prisma.UserCreateInput) {
+  async register(@Body() registerDto: RegisterDto) {
     return await this.authService.register(registerDto);
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req): Promise<any> {
-    console.log('req.user', req.user);
+  async login(@Request() req: any): Promise<any> {
     return this.authService.generateToken(req.user);
   }
 }
