@@ -26,19 +26,44 @@ export class ReviewsService {
 
   async create(createReviewDto: CreateReviewDto, userId: number) {
     const { content, rating, destinationId } = createReviewDto;
-    console.log('userId', userId);
-    await this.prisma.review.create({
-      data: {
-        content,
-        rating,
-        destinationId,
-        userId,
-      },
-    });
 
-    return {
-      statusCode: 201,
-      message: 'Review Created Successfull',
-    };
+    const destinations = await this.findAll(destinationId);
+
+    const userDestinationReviewd = destinations.find(
+      (item) => item.userId === userId && item.destinationId === destinationId,
+    );
+
+    const isUserReviewd = destinations.some((item) => item.userId === userId);
+
+    if (isUserReviewd) {
+      await this.prisma.review.update({
+        where: { id: userDestinationReviewd.id },
+        data: {
+          content,
+          rating,
+          destinationId,
+          userId,
+        },
+      });
+
+      return {
+        statusCode: 200,
+        message: 'Review Updated Successfull',
+      };
+    } else {
+      await this.prisma.review.create({
+        data: {
+          content,
+          rating,
+          destinationId,
+          userId,
+        },
+      });
+
+      return {
+        statusCode: 201,
+        message: 'Review Created Successfull',
+      };
+    }
   }
 }
