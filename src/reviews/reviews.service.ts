@@ -29,6 +29,7 @@ export class ReviewsService {
 
     const destinations = await this.findAll(destinationId);
 
+    // get review by userId and destinationId
     const userDestinationReviewd = destinations.find(
       (item) => item.userId === userId && item.destinationId === destinationId,
     );
