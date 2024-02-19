@@ -41,7 +41,6 @@ model Destination {
   destination String
   price       Float
   duration    Int
-  isFavorite  Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
