@@ -27,11 +27,6 @@ export class FavoritesService {
   async favorite(createFavoriteDto: CreateFavoriteDto, userId: number) {
     const { destinationId } = createFavoriteDto;
 
-    await this.prisma.destination.update({
-      where: { id: destinationId },
-      data: { isFavorite: true },
-    });
-
     await this.prisma.favorite.create({
       data: {
         destinationId,
@@ -46,11 +41,6 @@ export class FavoritesService {
   }
 
   async unfavorite(id: number, userId: number) {
-    await this.prisma.destination.update({
-      where: { id },
-      data: { isFavorite: false },
-    });
-
     // Delete favorite
     await this.prisma.favorite.delete({
       where: {
