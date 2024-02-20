@@ -41,6 +41,14 @@ export class DestinationsController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Get('all')
+  findAllDestinations(): Promise<Destination[] | undefined> {
+    return this.destinationsService.findAll();
+  }
+
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JWTAuthGuard)
   @Get('top')
   findTop(): Promise<Destination[] | undefined> {
