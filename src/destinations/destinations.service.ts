@@ -215,7 +215,7 @@ export class DestinationsService {
     // Upload the images to Cloudinary
     let destinationImgs = [];
 
-    if (images.length > 0) {
+    if (images) {
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
 
@@ -279,7 +279,7 @@ export class DestinationsService {
     // Upload the images to Cloudinary
     let newImages = [];
 
-    if (images.length > 0) {
+    if (images) {
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
 
