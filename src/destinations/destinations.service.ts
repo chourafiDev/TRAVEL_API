@@ -7,15 +7,6 @@ import { Destination } from '../utils/types';
 import { DestinationsFiletrDto } from './dto/destinations-filter.dto';
 import { Prisma } from '@prisma/client';
 
-interface Root {
-  price: Price;
-}
-
-interface Price {
-  gte: number;
-  lte: number;
-}
-
 @Injectable()
 export class DestinationsService {
   constructor(
