@@ -6,9 +6,4 @@ export class BookingCheckOutDto {
   @IsNotEmpty()
   @IsNumber()
   price: number;
-
-  @Type(() => Number)
-  @IsNotEmpty()
-  @IsNumber()
-  destinationId: number;
 }
