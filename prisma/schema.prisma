@@ -110,8 +110,7 @@ model Bookings {
   destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
   destinationId Int
 
+  number            String @unique
   amountPaid        Int
-  payment_status    String
 
-  @@unique([userId, destinationId])
 }
