@@ -30,7 +30,15 @@ export class BookingService {
   async findAll(userId: number) {
     const bookings = await this.prisma.bookings.findMany({
       where: { userId },
-      include: { destination: { select: { title: true } } },
+      include: {
+        destination: {
+          include: {
+            category: { select: { content: true } },
+            reviews: { select: { rating: true } },
+            images: { select: { imageUrl: true } },
+          },
+        },
+      },
     });
 
     return bookings;
