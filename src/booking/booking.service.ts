@@ -53,7 +53,7 @@ export class BookingService {
         destinationId,
         userId,
         amountPaid,
-        number: this.generateRandomString(6),
+        number: this.generateRandomString(9),
       },
     });
 
