@@ -7,8 +7,19 @@ const prisma = new PrismaClient();
 async function main() {
   const hashPassword = await hash(process.env.SEED_PASSWORD, 12);
 
-  await prisma.user.create({
-    data: {
+  await prisma.user.upsert({
+    where: { email: 'chourafi@gmail.com' },
+    update: {
+      username: 'chourafi',
+      email: 'chourafi@gmail.com',
+      firstName: 'chourafi',
+      lastName: 'chourafi',
+      role: 'admin',
+      imagePublicId: '',
+      imageUrl: '',
+      password: hashPassword,
+    },
+    create: {
       username: 'chourafi',
       email: 'chourafi@gmail.com',
       firstName: 'chourafi',
