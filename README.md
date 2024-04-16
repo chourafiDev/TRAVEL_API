@@ -1,3 +1,7 @@
+ <div align=start>
+        <img src="https://res.cloudinary.com/abdelmonaime/image/upload/v1713271840/travel/icon_x9v79j.png" alt="Journey waypoints" height="150">
+ </div>
+
 # Journey Waypoints
 
 This is the backend service for the Journey Waypoints application, responsible for managing destinations, bookings, and user interactions. Built with NestJS, this service utilizes Prisma ORM for database operations, Passport for authentication, and integrates Stripe for payment processing and Cloudinary for image management. It features role-based access control with distinct permissions for admins and users.
